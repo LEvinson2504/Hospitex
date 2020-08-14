@@ -92,6 +92,10 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
                   <RadioButton value="patient" />
                 </View>
                 <View>
+                  <Text>Doctor</Text>
+                  <RadioButton value="doctor" />
+                </View>
+                <View>
                   <Text>Hospital</Text>
                   <RadioButton value="hospital" />
                 </View>

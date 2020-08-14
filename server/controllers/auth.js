@@ -27,7 +27,7 @@ exports.registerHospital = async (req, res, next) => {
       message: "Succesfully created an user",
       user: {
         _id: newHospital._id,
-        username: newHospita.username,
+        username: newHospital.username,
       },
     });
   } else {
@@ -104,7 +104,7 @@ exports.meHospital = async (req, res, next) => {
 
 exports.register = async (req, res, next) => {
   const user = req.body;
-  const { username, password } = user;
+  const { username, password, type } = user;
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
@@ -120,6 +120,7 @@ exports.register = async (req, res, next) => {
     newUser = await User.create({
       username,
       password: hashedPassword,
+      role: type === "patient" ? "patient" : "doctor",
     });
     await newUser.save();
 

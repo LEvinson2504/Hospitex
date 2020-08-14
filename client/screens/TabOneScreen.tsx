@@ -67,7 +67,7 @@ const TabOneScreen: React.FC = () => {
       <Subheading>Your id is {id}</Subheading>
       <Title>Queue: {queue}</Title>
       <View>
-        {isTokenRegistered && queue ? (
+        {role === "patient" && isTokenRegistered && queue ? (
           <RegisteredToken
             tokenId={tokenId}
             queue={queue}

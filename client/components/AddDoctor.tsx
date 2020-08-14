@@ -1,9 +1,21 @@
+import React, { useContext } from "react";
 import { View, Text } from "./Themed";
 import { Button, RadioButton, TextInput } from "react-native-paper";
 import { Formik } from "formik";
 import Axios from "axios";
 import { baseURL } from "../baseURL";
 import * as Yup from "yup";
+import { UserContext } from "../contexts/UserContext";
+
+interface Doctor {
+  _id: string;
+  username: string;
+  password: string;
+}
+
+interface Props {
+  doctors: Doctor[];
+}
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().label("Username").required(),
@@ -13,20 +25,27 @@ const validationSchema = Yup.object().shape({
     .min(4, "Password must have at least 4 characters "),
 });
 
-const AddDoctor: React.FC = () => {
+const AddDoctor: React.FC<Props> = ({ doctors }) => {
+  const { id } = useContext(UserContext);
+
   return (
     <View>
-      <Text>Register</Text>
+      <Text>Add a doctor</Text>
       <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View>
         <Formik
           onSubmit={async (values) => {
+            console.log(`[Hospital] hospitalId: ${id}`);
             const response = await Axios({
               method: "POST",
               url: `${baseURL}/hospital/add-doctor`,
-              data: values,
+              data: {
+                ...values,
+                hospitalId: id,
+              },
             });
             console.log(response.data);
+
             if (response.data) {
               // add notification succesful here
             } else {
@@ -52,7 +71,7 @@ const AddDoctor: React.FC = () => {
                 onChangeText={handleChange("password")}
               />
               <Text style={{ color: "red" }}>{errors.password}</Text>
-              <Button onPress={handleSubmit}>Add Doctor</Button>
+              <Button onPress={handleSubmit}>Add Doctors</Button>
             </View>
           )}
         </Formik>

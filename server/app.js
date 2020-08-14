@@ -69,7 +69,9 @@ sockets.tokenSocket(redis, io);
 
 // * ROUTES
 const authRoutes = require("./routes/auth");
+const hospitalRoutes = require("./routes/hospital");
 app.use("/auth", authRoutes);
+app.use("/hospital", hospitalRoutes);
 
 const connectDB = async () => {
   try {

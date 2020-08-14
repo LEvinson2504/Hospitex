@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AdminPanel from "./AdminPanel";
 import { View } from "./Themed";
 import { Title, Button } from "react-native-paper";
+import AddDoctor from "./AddDoctor";
+import Doctors from "./Doctors";
 
 type Props = {
   socket: SocketIOClient.Socket;
@@ -23,6 +25,7 @@ const Admin: React.FC<Props> = ({
       setTokenId={setTokenId}
       setQueue={setQueue}
     />,
+    <Doctors />,
   ]);
   const [currentDisplay, setCurrentDisplay] = useState<number>(0);
 
@@ -33,7 +36,7 @@ const Admin: React.FC<Props> = ({
           setCurrentDisplay(currentDisplay === 0 ? 1 : 0);
         }}
       >
-        {currentDisplay === 0 ? "Add Doctors" : "Admin Panel"}
+        {currentDisplay === 0 ? "Doctors" : "Admin Panel"}
       </Button>
       <View>{displays[currentDisplay]}</View>
     </View>

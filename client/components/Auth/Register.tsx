@@ -26,7 +26,7 @@ const Register: React.FC = () => {
             const response = await Axios({
               method: "POST",
               url: `${baseURL}/auth/${
-                values.type === "patient" ? "user" : "hospital"
+                values.type === "hospital" ? "hospital" : "user"
               }/register`,
               data: values,
             });
@@ -59,6 +59,10 @@ const Register: React.FC = () => {
                 <View>
                   <Text>Patient</Text>
                   <RadioButton value="patient" />
+                </View>
+                <View>
+                  <Text>Doctor</Text>
+                  <RadioButton value="doctor" />
                 </View>
                 <View>
                   <Text>Hospital</Text>
