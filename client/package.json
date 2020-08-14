@@ -1,0 +1,53 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "test": "jest --watchAll"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^10.2.0",
+    "@react-native-community/masked-view": "0.1.10",
+    "@react-navigation/bottom-tabs": "^5.8.0",
+    "@react-navigation/native": "^5.7.3",
+    "@react-navigation/stack": "^5.9.0",
+    "@types/socket.io": "^2.1.11",
+    "@types/socket.io-client": "^1.4.33",
+    "axios": "^0.19.2",
+    "expo": "~38.0.9",
+    "expo-asset": "~8.1.7",
+    "expo-constants": "~9.1.1",
+    "expo-font": "~8.2.2",
+    "expo-linking": "^1.0.3",
+    "expo-splash-screen": "~0.5.0",
+    "expo-status-bar": "^1.0.2",
+    "expo-web-browser": "~8.3.1",
+    "formik": "^2.1.5",
+    "react": "~16.13.1",
+    "react-dom": "~16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+    "react-native-gesture-handler": "~1.7.0",
+    "react-native-paper": "^4.0.1",
+    "react-native-safe-area-context": "~3.1.4",
+    "react-native-screens": "~2.10.1",
+    "react-native-web": "~0.13.6",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "sync-storage": "^0.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@types/react": "~16.9.46",
+    "@types/react-native": "~0.63.8",
+    "babel-preset-expo": "~8.2.3",
+    "jest-expo": "~38.0.2",
+    "typescript": "~3.9.7"
+  },
+  "private": true
+}
