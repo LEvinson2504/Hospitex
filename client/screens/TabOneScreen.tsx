@@ -83,7 +83,7 @@ const TabOneScreen: React.FC = () => {
         )}
       </View>
       <View>
-        {role === "doctor" ? (
+        {role === "hospital" ? (
           <Admin
             socket={socket}
             setIsTokenRegistered={setIsTokenRegistered}

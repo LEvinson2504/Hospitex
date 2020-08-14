@@ -25,7 +25,9 @@ const Register: React.FC = () => {
           onSubmit={async (values) => {
             const response = await Axios({
               method: "POST",
-              url: `${baseURL}/auth/register`,
+              url: `${baseURL}/auth/${
+                values.type === "patient" ? "user" : "hospital"
+              }/register`,
               data: values,
             });
           }}
@@ -59,8 +61,8 @@ const Register: React.FC = () => {
                   <RadioButton value="patient" />
                 </View>
                 <View>
-                  <Text>Doctor</Text>
-                  <RadioButton value="doctor" />
+                  <Text>Hospital</Text>
+                  <RadioButton value="hospital" />
                 </View>
               </RadioButton.Group>
 

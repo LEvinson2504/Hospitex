@@ -1,4 +1,4 @@
-const redisFunctions = require("./redis/utils");
+const redisFunctions = require("./redis/queue");
 
 exports.tokenSocket = (redis, io) => {
   io.on("connection", (socket) => {

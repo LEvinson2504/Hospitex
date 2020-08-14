@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { View, Text } from "../Themed";
 import { Formik, FormikProps } from "formik";
-import { TextInput, Button } from "react-native-paper";
+import { TextInput, Button, RadioButton } from "react-native-paper";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
 import { baseURL } from "../../baseURL";
@@ -35,7 +35,9 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
               console.log("[Auth] A user is trying to login");
               const response = await axios({
                 method: "POST",
-                url: `${baseURL}/auth/login`,
+                url: `${baseURL}/auth/${
+                  values.type === "patient" ? "user" : "hospital"
+                }/login`,
                 data: values,
               });
               if (response.data && response.data.user) {
@@ -50,7 +52,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
                 setUser({
                   id: user._id,
                   username: user.username,
-                  role: user.role,
+                  role: values.type === "patient" ? "patient" : "hospital",
                 });
                 setIsLoggedIn(true);
               }
@@ -63,6 +65,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
           initialValues={{
             username: "",
             password: "",
+            type: "",
           }}
           validationSchema={validationSchema}
         >
@@ -74,14 +77,25 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
                 onChangeText={handleChange("username")}
               />
               <Text style={{ color: "red" }}>{errors.username}</Text>
-
               <TextInput
                 label="Password"
                 value={values.password}
                 onChangeText={handleChange("password")}
               />
               <Text style={{ color: "red" }}>{errors.password}</Text>
-
+              <RadioButton.Group
+                onValueChange={handleChange("type")}
+                value={values.type}
+              >
+                <View>
+                  <Text>Patient</Text>
+                  <RadioButton value="patient" />
+                </View>
+                <View>
+                  <Text>Hospital</Text>
+                  <RadioButton value="hospital" />
+                </View>
+              </RadioButton.Group>
               <Button onPress={handleSubmit}>Login</Button>
             </View>
           )}
