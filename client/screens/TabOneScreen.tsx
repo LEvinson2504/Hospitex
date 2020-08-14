@@ -11,17 +11,17 @@ import Auth from "../components/Auth/Auth";
 import Axios from "axios";
 import { UserContext } from "../contexts/UserContext";
 import Admin from "../components/Admin";
+import { baseURL } from "../baseURL";
 
 const checkAuth = async () => {
   const response = await Axios({
     method: "GET",
-    url: "http://10.0.2.2:3000/auth/me",
-    withCredentials: true,
+    url: `${baseURL}/auth/me`,
   });
   return response.data;
 };
 let socket: SocketIOClient.Socket;
-socket = io("http://10.0.2.2:3000");
+socket = io(baseURL);
 socket.on("connection", () => {
   console.log(" kuda user logged in");
 });
@@ -34,7 +34,6 @@ const TabOneScreen: React.FC = () => {
   const [queue, setQueue] = useState<number>();
 
   const queueRef = useRef(queue);
-  queueRef.current;
 
   let appComponent: JSX.Element = <View></View>;
 
@@ -47,79 +46,77 @@ const TabOneScreen: React.FC = () => {
           role: response.user.role,
         });
 
-        socket.emit("init", "[Client] Client has connected to socket");
-
         socket.on("display-queue", (queueLength: number) => {
           console.log("setting new length", queueLength);
           setQueue(queueLength);
           queueRef.current = queueLength;
         });
 
+        socket.emit("init", "[Client] Client has connected to socket");
+
         setIsLoggedIn(true);
       }
     });
   }, []);
 
-  appComponent =
-    queueRef.current === undefined || queueRef.current === null ? (
-      <View></View>
-    ) : (
-      <View style={styles.container}>
-        <Title>
-          Welcome, {role} {username}
-        </Title>
-        <Subheading>Your id is {id}</Subheading>
-        <Title>Queue: {queue}</Title>
-        <View>
-          {isTokenRegistered ? (
-            <RegisteredToken
-              tokenId={tokenId}
-              queue={queueRef.current}
-              setIsTokenRegistered={setIsTokenRegistered}
-            />
-          ) : (
-            <ApplyToken
-              socket={socket}
-              setIsTokenRegistered={setIsTokenRegistered}
-              setTokenId={setTokenId}
-              setQueue={setQueue}
-            />
-          )}
-        </View>
-        <View>
-          {role === "doctor" ? (
-            <Admin
-              socket={socket}
-              setIsTokenRegistered={setIsTokenRegistered}
-              setTokenId={setTokenId}
-              setQueue={setQueue}
-            />
-          ) : (
-            <View></View>
-          )}
-        </View>
-        <View>
-          <Button
-            onPress={async () => {
-              try {
-                const response = await Axios({
-                  method: "GET",
-                  url: "http://10.0.2.2:3000/auth/logout",
-                  withCredentials: true,
-                });
-                console.log(response);
-                setIsLoggedIn(false);
-              } catch (err) {
-                console.log("Error");
-                console.log(err.message);
-              }
-            }}
-          >
-            Logout
-          </Button>
-        </View>
+  console.log(`queue: ${queue}`);
+  appComponent = (
+    <View style={styles.container}>
+      <Title>
+        Welcome, {role} {username}
+      </Title>
+      <Subheading>Your id is {id}</Subheading>
+      <Title>Queue: {queueRef.current}</Title>
+      <View>
+        {isTokenRegistered && queue ? (
+          <RegisteredToken
+            tokenId={tokenId}
+            queue={queue}
+            setIsTokenRegistered={setIsTokenRegistered}
+          />
+        ) : (
+          <ApplyToken
+            socket={socket}
+            setIsTokenRegistered={setIsTokenRegistered}
+            setTokenId={setTokenId}
+            setQueue={setQueue}
+          />
+        )}
       </View>
-    );
+      <View>
+        {role === "doctor" ? (
+          <Admin
+            socket={socket}
+            setIsTokenRegistered={setIsTokenRegistered}
+            setTokenId={setTokenId}
+            setQueue={setQueue}
+          />
+        ) : (
+          <View></View>
+        )}
+      </View>
+      <View>
+        <Button
+          onPress={async () => {
+            try {
+              const response = await Axios({
+                method: "GET",
+                url: `${baseURL}/auth/logout`,
+                withCredentials: true,
+              });
+              setIsLoggedIn(false);
+            } catch (err) {
+              console.log("Error");
+              console.log(err.message);
+            }
+          }}
+        >
+          Logout
+        </Button>
+      </View>
+    </View>
+  );
+  console.log(isLoggedIn);
   return isLoggedIn ? appComponent : <Auth setIsLoggedIn={setIsLoggedIn} />;
 };
 

@@ -6,6 +6,7 @@ import { TextInput, Button } from "react-native-paper";
 import axios from "axios";
 import { AsyncStorage } from "react-native";
 import { UserContext } from "../../contexts/UserContext";
+import { baseURL } from "../../baseURL";
 
 type Props = {
   setIsLoggedIn: (bool: boolean) => void;
@@ -24,7 +25,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
             try {
               const response = await axios({
                 method: "POST",
-                url: "http://10.0.2.2:3000/auth/login",
+                url: `${baseURL}/auth/login`,
                 data: values,
               });
               if (response.data && response.data.user) {

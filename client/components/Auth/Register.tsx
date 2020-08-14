@@ -2,25 +2,23 @@ import React from "react";
 
 import { View, Text } from "../Themed";
 import { Formik } from "formik";
-import Axios from "axios";
 import { TextInput, RadioButton, Button } from "react-native-paper";
+import { baseURL } from "../../baseURL";
+import Axios from "axios";
 
 const Register: React.FC = () => {
   return (
     <View>
-      <Text>Register baus</Text>
+      <Text>Register</Text>
       <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View>
         <Formik
           onSubmit={async (values) => {
-            console.log(values);
-
             const response = await Axios({
               method: "POST",
-              url: "http://10.0.2.2:3000/auth/register",
+              url: `${baseURL}/auth/register`,
               data: values,
             });
-            console.log(response);
           }}
           initialValues={{
             username: "",

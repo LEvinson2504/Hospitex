@@ -23,7 +23,6 @@ const ApplyToken: React.FC<Props> = ({
             socket.emit("register-token");
             setIsTokenRegistered(true);
             setTokenId("tokenId from server here");
-            setQueue(5);
           } catch (err) {
             console.log(err);
           }

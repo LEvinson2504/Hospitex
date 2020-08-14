@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 
 exports.register = async (req, res, next) => {
   const { username, password, type } = req.body;
-  console.log("test");
   const hashedPassword = await bcrypt.hash(password, 12);
   if (hashedPassword) {
     if (type === "doctor") {

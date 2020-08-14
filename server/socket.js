@@ -1,7 +1,9 @@
 const redisFunctions = require("./redis/utils");
-const { v4: uuid } = require("uuid");
 
 exports.tokenSocket = (redis, io) => {
+  // * EMIT -> SEND DATA
+  // * ON -> RECEIVE DATA
+
   io.on("connection", (socket) => {
     socket.on("init", async (msg) => {
       console.log(`[init] ${msg}`);
@@ -21,13 +23,14 @@ exports.tokenSocket = (redis, io) => {
 
     socket.on("check-token", async (id) => {});
 
-    socket.on("cancel-token", async () => {});
+    socket.on("cancel-token", async () => {
+      // cancel token
+    });
 
     socket.on("delete-token", async () => {
       // delete queue disini
       await redisFunctions.deleteAllTokens(redis);
 
-      console.log("tokens: ");
       console.log(await redisFunctions.getTokens(redis));
       const len = await redisFunctions.getTokensLength(redis);
 

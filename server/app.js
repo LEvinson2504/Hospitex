@@ -12,10 +12,24 @@ const sharedSession = require("express-socket.io-session");
 const connectRedis = require("connect-redis");
 
 const app = express();
+app.options("*", cors());
+app.use(cors());
 const server = http.createServer(app);
-const options = { origins: "*:*" };
-const io = require("socket.io")(server, options);
+const options = {
+  origin: "*:*",
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+      "Access-Control-Allow-Credentials": true,
+    };
+    res.writeHead(200, headers);
+    res.end();
+  },
+};
 
+// * THIS IS USED FOR THE SOCKETS
+const io = require("socket.io")(server, options);
 const redis = new Redis();
 
 const RedisStore = connectRedis(session);
@@ -48,8 +62,6 @@ io.use(
     }
   )
 );
-
-app.use(cors());
 app.use(bodyParser.json());
 
 const sockets = require("./socket");
@@ -57,13 +69,24 @@ sockets.tokenSocket(redis, io);
 
 // * ROUTES
 const authRoutes = require("./routes/auth");
-
 app.use("/auth", authRoutes);
 
-server.listen(process.env.PORT, async () => {
-  await mongoose.connect(process.env.DATABASE_URI, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DATABASE_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("[Database] Connected to database");
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
+
+connectDB().then(() => {
+  server.listen(process.env.PORT, async () => {
+    console.log(`[Server] Server has started on port ${process.env.PORT}`);
   });
-  console.log(`Server has started on port ${process.env.PORT}`);
-});
+}).catch;
