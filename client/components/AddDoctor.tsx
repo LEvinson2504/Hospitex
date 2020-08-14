@@ -1,10 +1,8 @@
-import React from "react";
-
-import { View, Text } from "../Themed";
+import { View, Text } from "./Themed";
+import { Button, RadioButton, TextInput } from "react-native-paper";
 import { Formik } from "formik";
-import { TextInput, RadioButton, Button } from "react-native-paper";
-import { baseURL } from "../../baseURL";
 import Axios from "axios";
+import { baseURL } from "../baseURL";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object().shape({
@@ -15,7 +13,7 @@ const validationSchema = Yup.object().shape({
     .min(4, "Password must have at least 4 characters "),
 });
 
-const Register: React.FC = () => {
+const AddDoctor: React.FC = () => {
   return (
     <View>
       <Text>Register</Text>
@@ -25,16 +23,19 @@ const Register: React.FC = () => {
           onSubmit={async (values) => {
             const response = await Axios({
               method: "POST",
-              url: `${baseURL}/auth/${
-                values.type === "patient" ? "user" : "hospital"
-              }/register`,
+              url: `${baseURL}/hospital/add-doctor`,
               data: values,
             });
+            console.log(response.data);
+            if (response.data) {
+              // add notification succesful here
+            } else {
+              // add fail notification
+            }
           }}
           initialValues={{
             username: "",
             password: "",
-            type: "patient",
           }}
           validationSchema={validationSchema}
         >
@@ -51,22 +52,7 @@ const Register: React.FC = () => {
                 onChangeText={handleChange("password")}
               />
               <Text style={{ color: "red" }}>{errors.password}</Text>
-
-              <RadioButton.Group
-                onValueChange={handleChange("type")}
-                value={values.type}
-              >
-                <View>
-                  <Text>Patient</Text>
-                  <RadioButton value="patient" />
-                </View>
-                <View>
-                  <Text>Hospital</Text>
-                  <RadioButton value="hospital" />
-                </View>
-              </RadioButton.Group>
-
-              <Button onPress={handleSubmit}>Register</Button>
+              <Button onPress={handleSubmit}>Add Doctor</Button>
             </View>
           )}
         </Formik>
@@ -75,4 +61,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default AddDoctor;

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import AdminPanel from "./AdminPanel";
 import { View } from "./Themed";
 import { Title, Button } from "react-native-paper";
 
@@ -15,25 +16,26 @@ const Admin: React.FC<Props> = ({
   setTokenId,
   setQueue,
 }) => {
+  const [displays, setDisplays] = useState([
+    <AdminPanel
+      socket={socket}
+      setIsTokenRegistered={setIsTokenRegistered}
+      setTokenId={setTokenId}
+      setQueue={setQueue}
+    />,
+  ]);
+  const [currentDisplay, setCurrentDisplay] = useState<number>(0);
+
   return (
     <View>
-      <Title>Admin SITE</Title>
       <Button
-        onPress={async () => {
-          console.log("Sending request to delete tokens");
-
-          try {
-            await socket.emit("delete-queue");
-            setIsTokenRegistered(false);
-            setTokenId("tokenId from server here");
-            setQueue(0);
-          } catch (err) {}
+        onPress={() => {
+          setCurrentDisplay(currentDisplay === 0 ? 1 : 0);
         }}
       >
-        Mr Clean
+        {currentDisplay === 0 ? "Add Doctors" : "Admin Panel"}
       </Button>
-      <Button onPress={async () => {}}>Take Queue</Button>
-      <Button onPress={async () => {}}>Finish Queue</Button>
+      <View>{displays[currentDisplay]}</View>
     </View>
   );
 };
