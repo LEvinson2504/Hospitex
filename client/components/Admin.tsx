@@ -23,7 +23,7 @@ const Admin: React.FC<Props> = ({
           console.log("Sending request to delete tokens");
 
           try {
-            await socket.emit("delete-token");
+            await socket.emit("delete-queue");
             setIsTokenRegistered(false);
             setTokenId("tokenId from server here");
             setQueue(0);

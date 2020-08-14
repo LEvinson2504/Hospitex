@@ -38,8 +38,8 @@ app.use(
     store: new RedisStore({
       client: redis,
     }),
-    name: "token",
-    secret: "asdasdasdasd",
+    name: process.env.COOKIE_NAME,
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {

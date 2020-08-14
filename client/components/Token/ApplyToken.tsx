@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "../Themed";
 import { Title, Button } from "react-native-paper";
+import { UserContext } from "../../contexts/UserContext";
 
 type Props = {
   socket: SocketIOClient.Socket;
@@ -15,14 +16,16 @@ const ApplyToken: React.FC<Props> = ({
   setTokenId,
   setQueue,
 }) => {
+  const { id } = useContext(UserContext);
+
   return (
     <View>
       <Button
         onPress={async () => {
           try {
-            socket.emit("register-token");
+            console.log(`[Queue] Sending register-queue, ${id}`);
+            socket.emit("register-queue", id);
             setIsTokenRegistered(true);
-            setTokenId("tokenId from server here");
           } catch (err) {
             console.log(err);
           }

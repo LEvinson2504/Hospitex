@@ -1,34 +1,30 @@
 const redisFunctions = require("./redis/utils");
 
 exports.tokenSocket = (redis, io) => {
-  // * EMIT -> SEND DATA
-  // * ON -> RECEIVE DATA
-
   io.on("connection", (socket) => {
     socket.on("init", async (msg) => {
-      console.log(`[init] ${msg}`);
+      console.log(`${msg}`);
       const len = await redisFunctions.getTokensLength(redis);
       io.sockets.emit("display-queue", len);
     });
 
-    socket.on("register-token", async (id) => {
-      // nambahin queue disini
+    socket.on("register-queue", async (id) => {
+      console.log(`[Queue] Registering a queue ${id}`);
       await redisFunctions.pushToken(redis, id);
-      console.log("tokens: ");
-      console.log(await redisFunctions.getTokens(redis));
+
+      console.log("Tokens: ");
+      console.log(`${await redisFunctions.getTokens(redis)}`);
+
       const len = await redisFunctions.getTokensLength(redis);
 
       io.sockets.emit("display-queue", len);
     });
 
-    socket.on("check-token", async (id) => {});
+    socket.on("check-queue", async (id) => {});
 
-    socket.on("cancel-token", async () => {
-      // cancel token
-    });
+    socket.on("cancel-queue", async () => {});
 
-    socket.on("delete-token", async () => {
-      // delete queue disini
+    socket.on("delete-queue", async () => {
       await redisFunctions.deleteAllTokens(redis);
 
       console.log(await redisFunctions.getTokens(redis));

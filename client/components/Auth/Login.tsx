@@ -1,16 +1,25 @@
 import React, { useContext } from "react";
 
 import { View, Text } from "../Themed";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import { TextInput, Button } from "react-native-paper";
 import axios from "axios";
-import { AsyncStorage } from "react-native";
 import { UserContext } from "../../contexts/UserContext";
 import { baseURL } from "../../baseURL";
+import * as Yup from "yup";
+import AsyncStorage from "@react-native-community/async-storage";
 
 type Props = {
   setIsLoggedIn: (bool: boolean) => void;
 };
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string().label("Username").required(),
+  password: Yup.string()
+    .label("Password")
+    .required()
+    .min(4, "Password must have at least 4 characters "),
+});
 
 const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { setUser } = useContext(UserContext);
@@ -23,15 +32,21 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
         <Formik
           onSubmit={async (values) => {
             try {
+              console.log("[Auth] A user is trying to login");
               const response = await axios({
                 method: "POST",
                 url: `${baseURL}/auth/login`,
                 data: values,
               });
               if (response.data && response.data.user) {
-                // set context provider api here for session
-                console.log("Successfully logged in");
+                console.log("[Auth] User successfully logged in");
                 const user = response.data.user;
+                console.log(user._id);
+                await AsyncStorage.setItem("cookies", user._id, (err) => {
+                  console.log("[Cookies] setStorage failed");
+                  console.log(err);
+                });
+
                 setUser({
                   id: user._id,
                   username: user.username,
@@ -49,19 +64,24 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
             username: "",
             password: "",
           }}
+          validationSchema={validationSchema}
         >
-          {({ values, handleSubmit, handleChange }) => (
+          {({ values, handleSubmit, handleChange, errors }) => (
             <View>
               <TextInput
                 label="Username"
                 value={values.username}
                 onChangeText={handleChange("username")}
               />
+              <Text style={{ color: "red" }}>{errors.username}</Text>
+
               <TextInput
                 label="Password"
                 value={values.password}
                 onChangeText={handleChange("password")}
               />
+              <Text style={{ color: "red" }}>{errors.password}</Text>
+
               <Button onPress={handleSubmit}>Login</Button>
             </View>
           )}

@@ -5,6 +5,15 @@ import { Formik } from "formik";
 import { TextInput, RadioButton, Button } from "react-native-paper";
 import { baseURL } from "../../baseURL";
 import Axios from "axios";
+import * as Yup from "yup";
+
+const alidationSchema = Yup.object().shape({
+  username: Yup.string().label("Username").required(),
+  password: Yup.string()
+    .label("Password")
+    .required()
+    .min(4, "Password must have at least 4 characters "),
+});
 
 const Register: React.FC = () => {
   return (
@@ -25,8 +34,9 @@ const Register: React.FC = () => {
             password: "",
             type: "patient",
           }}
+          validationSchema={alidationSchema}
         >
-          {({ values, handleSubmit, handleChange }) => (
+          {({ values, handleSubmit, handleChange, errors }) => (
             <View>
               <TextInput
                 label="Username"
@@ -38,6 +48,8 @@ const Register: React.FC = () => {
                 value={values.password}
                 onChangeText={handleChange("password")}
               />
+              <Text style={{ color: "red" }}>{errors.password}</Text>
+
               <RadioButton.Group
                 onValueChange={handleChange("type")}
                 value={values.type}

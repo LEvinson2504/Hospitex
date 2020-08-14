@@ -20,10 +20,11 @@ const checkAuth = async () => {
   });
   return response.data;
 };
+
 let socket: SocketIOClient.Socket;
 socket = io(baseURL);
 socket.on("connection", () => {
-  console.log(" kuda user logged in");
+  console.log(`[Queue] Initializing Queue`);
 });
 
 const TabOneScreen: React.FC = () => {
@@ -33,9 +34,16 @@ const TabOneScreen: React.FC = () => {
   const [tokenId, setTokenId] = useState<string>("");
   const [queue, setQueue] = useState<number>();
 
-  const queueRef = useRef(queue);
-
   let appComponent: JSX.Element = <View></View>;
+
+  useEffect(() => {
+    socket.on("display-queue", (queueLength: number) => {
+      console.log(`Updating queue: ${queue}`);
+      setQueue(queueLength);
+    });
+
+    socket.emit("init", "[Client] Client has connected to socket");
+  }, []);
 
   useEffect(() => {
     checkAuth().then((response) => {
@@ -46,27 +54,18 @@ const TabOneScreen: React.FC = () => {
           role: response.user.role,
         });
 
-        socket.on("display-queue", (queueLength: number) => {
-          console.log("setting new length", queueLength);
-          setQueue(queueLength);
-          queueRef.current = queueLength;
-        });
-
-        socket.emit("init", "[Client] Client has connected to socket");
-
         setIsLoggedIn(true);
       }
     });
   }, []);
-
-  console.log(`queue: ${queue}`);
+  console.log(`Queue: ${queue}`);
   appComponent = (
     <View style={styles.container}>
       <Title>
         Welcome, {role} {username}
       </Title>
       <Subheading>Your id is {id}</Subheading>
-      <Title>Queue: {queueRef.current}</Title>
+      <Title>Queue: {queue}</Title>
       <View>
         {isTokenRegistered && queue ? (
           <RegisteredToken
@@ -99,11 +98,12 @@ const TabOneScreen: React.FC = () => {
         <Button
           onPress={async () => {
             try {
+              console.log(`[Auth] trying to logout...`);
               const response = await Axios({
                 method: "GET",
                 url: `${baseURL}/auth/logout`,
-                withCredentials: true,
               });
+              console.log(response.data);
               setIsLoggedIn(false);
             } catch (err) {
               console.log("Error");
@@ -116,7 +116,7 @@ const TabOneScreen: React.FC = () => {
       </View>
     </View>
   );
-  console.log(isLoggedIn);
+  console.log(`[Auth] isLoggedIn: ${isLoggedIn}`);
   return isLoggedIn ? appComponent : <Auth setIsLoggedIn={setIsLoggedIn} />;
 };
 
