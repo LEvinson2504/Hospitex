@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View } from "./Themed";
 import Axios from "axios";
-import { baseURL } from "../baseURL";
 import { Title, Button, List } from "react-native-paper";
+import { UserContext } from "../../contexts/UserContext";
+import { baseURL } from "../../baseURL";
+import { View } from "../UI/Themed";
+import DoctorList from "./DoctorList";
 import AddDoctor from "./AddDoctor";
-import DoctorList from "./Doctors/DoctorList";
-import { UserContext } from "../contexts/UserContext";
 
 export interface DoctorProps {
   _id: string;

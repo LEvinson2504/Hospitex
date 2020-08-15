@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "./Themed";
 import { Title, Button } from "react-native-paper";
+import { View } from "../UI/Themed";
 
 type Props = {
   socket: SocketIOClient.Socket;

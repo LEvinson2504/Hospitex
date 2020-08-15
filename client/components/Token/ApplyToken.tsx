@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View } from "../Themed";
+import { View } from "../UI/Themed";
 import { Title, Button } from "react-native-paper";
 import { UserContext } from "../../contexts/UserContext";
 

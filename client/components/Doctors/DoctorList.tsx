@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "../Themed";
+import { View } from "../UI/Themed";
 import { Title, List } from "react-native-paper";
 
 export interface DoctorProps {

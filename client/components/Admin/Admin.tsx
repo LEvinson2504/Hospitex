@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import AdminPanel from "./AdminPanel";
-import { View } from "./Themed";
+import { View } from "../UI/Themed";
 import { Title, Button } from "react-native-paper";
-import AddDoctor from "./AddDoctor";
-import Doctors from "./Doctors";
+import AddDoctor from "../Doctors/AddDoctor";
+import Doctors from "../Doctors/Doctors";
+import AdminPanel from "./AdminPanel";
 
 type Props = {
   socket: SocketIOClient.Socket;

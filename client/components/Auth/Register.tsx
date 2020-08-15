@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text } from "../Themed";
+import { View, Text } from "../UI/Themed";
 import { Formik } from "formik";
 import { TextInput, RadioButton, Button } from "react-native-paper";
 import { baseURL } from "../../baseURL";

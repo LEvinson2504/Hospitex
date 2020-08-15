@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
-import { View } from "../Themed";
+import { View } from "../UI/Themed";
 import { Button } from "react-native-paper";
 
 type Props = {

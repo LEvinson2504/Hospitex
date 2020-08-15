@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View } from "../Themed";
+import { View } from "../UI/Themed";
 import { Title, Subheading, Button } from "react-native-paper";
 
 type Props = {

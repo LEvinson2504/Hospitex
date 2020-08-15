@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { View, Text } from "../Themed";
+import { View, Text } from "../UI/Themed";
 import { Formik, FormikProps } from "formik";
 import { TextInput, Button, RadioButton } from "react-native-paper";
 import axios from "axios";
@@ -8,6 +8,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { baseURL } from "../../baseURL";
 import * as Yup from "yup";
 import AsyncStorage from "@react-native-community/async-storage";
+import { isLoggedInContext } from "../../contexts/isLoggedInContext";
 
 type Props = {
   setIsLoggedIn: (bool: boolean) => void;
@@ -21,7 +22,8 @@ const validationSchema = Yup.object().shape({
     .min(4, "Password must have at least 4 characters "),
 });
 
-const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
+const Login: React.FC<Props> = () => {
+  const { setIsLoggedIn } = useContext(isLoggedInContext);
   const { setUser } = useContext(UserContext);
 
   return (

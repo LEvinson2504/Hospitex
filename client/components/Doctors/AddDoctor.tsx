@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text } from "./Themed";
+import { View, Text } from "../UI/Themed";
 import { Button, RadioButton, TextInput } from "react-native-paper";
 import { Formik } from "formik";
 import Axios from "axios";
-import { baseURL } from "../baseURL";
+import { baseURL } from "../../baseURL";
 import * as Yup from "yup";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 import { Checkbox } from "react-native-paper";
 
 export interface DoctorProps {
