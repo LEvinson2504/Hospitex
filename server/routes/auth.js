@@ -15,4 +15,6 @@ router.get("/user/logout", authController.logout);
 router.post("/user/register", authController.register);
 router.post("/user/login", authController.login);
 
+router.get("/user/:userId", authController.findUserById);
+
 module.exports = router;

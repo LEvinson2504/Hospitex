@@ -3,14 +3,31 @@ const Hospital = require("../models/hospital");
 
 const bcrypt = require("bcryptjs");
 
+exports.findUserById = async (req, res, next) => {
+  const { userId } = req.params;
+  console.log(`[Auth] Entered /:userId route`);
+  const user = User.findById(userId);
+  if (!user) {
+    return res.status(404).json({
+      message: `User with the id of ${userId} was not found`,
+    });
+  }
+
+  return res.status(200).json({
+    message: "Successfully fetched user",
+    user,
+  });
+};
+
 exports.registerHospital = async (req, res, next) => {
   const hospital = req.body;
-  const { username, password } = hospital;
-  const existingHospital = await Hospital.findOne({ username });
+  const { name, email, password, phone, type } = hospital;
+
+  const existingHospital = await Hospital.findOne({ email });
 
   if (existingHospital) {
     return res.status(409).json({
-      message: `An username with the name of ${username} already exists`,
+      message: `An email with the name of ${email} already exists`,
       user,
     });
   }
@@ -18,17 +35,16 @@ exports.registerHospital = async (req, res, next) => {
   if (hashedPassword) {
     console.log(`[Auth] Registered a Hospital`);
     const newHospital = await Hospital.create({
-      username,
+      name,
+      email,
       password: hashedPassword,
+      phone,
     });
     await newHospital.save();
 
     return res.status(201).json({
       message: "Succesfully created an user",
-      user: {
-        _id: newHospital._id,
-        username: newHospital.username,
-      },
+      user: hospital,
     });
   } else {
     return res.status(500).json({
@@ -42,7 +58,7 @@ exports.loginHospital = async (req, res, next) => {
   const hospital = req.body;
 
   const existingHospital = await Hospital.findOne({
-    username: hospital.username,
+    email: hospital.email,
   })
     .select("+password")
     .exec();
@@ -63,8 +79,8 @@ exports.loginHospital = async (req, res, next) => {
 
   // set session
   console.log(`[Auth] A hospital logged in`);
-  req.session.hospitalId = existingHospital._id;
-  console.log(`[Auth] hospitalId: ${req.session.userId}`);
+  req.session.id = existingHospital._id;
+  console.log(`[Auth] hospitalId: ${req.session.id}`);
 
   res.status(200).json({
     message: "Logged in successfully",
@@ -73,8 +89,8 @@ exports.loginHospital = async (req, res, next) => {
 };
 
 exports.logoutHospital = async (req, res, next) => {
-  console.log(`[Auth] hospital sessionId: ${req.session.hospitalId}`);
-  if (req.session && req.session.hospitalId) {
+  console.log(`[Auth] hospital sessionId: ${req.session.id}`);
+  if (req.session && req.session.id) {
     req.session.destroy((err) => {
       console.log("[Auth] A hospital is trying to logout");
       if (err) {
@@ -90,8 +106,8 @@ exports.logoutHospital = async (req, res, next) => {
 };
 
 exports.meHospital = async (req, res, next) => {
-  if (req.session && req.session.hospitalId) {
-    const user = await User.findOne({ _id: req.session.hospitalId });
+  if (req.session && req.session.id) {
+    const user = await User.findOne({ _id: req.session.id });
     if (user) {
       return res.status(200).json({
         message: "Authentication successful",
@@ -106,12 +122,12 @@ exports.meHospital = async (req, res, next) => {
 
 exports.register = async (req, res, next) => {
   const user = req.body;
-  const { username, password, type } = user;
-  const existingUser = await User.findOne({ username });
+  const { name, email, password, phone, type, hospital } = user;
+  const existingUser = await User.findOne({ email });
 
   if (existingUser) {
     return res.status(409).json({
-      message: `An username with the name of ${username} already exists`,
+      message: `${email} already exists`,
       user,
     });
   }
@@ -120,8 +136,10 @@ exports.register = async (req, res, next) => {
     console.log(`[Auth] Registered an User`);
     let newUser;
     newUser = await User.create({
-      username,
+      name: name,
+      email: email,
       password: hashedPassword,
+      phone: phone,
       role: type === "patient" ? "patient" : "doctor",
     });
     await newUser.save();
@@ -130,7 +148,7 @@ exports.register = async (req, res, next) => {
       message: "Succesfully created an user",
       user: {
         _id: newUser._id,
-        username: newUser.username,
+        email: newUser.email,
       },
     });
   } else {
@@ -144,7 +162,7 @@ exports.login = async (req, res, next) => {
   console.log("[Auth] An user is trying to login");
   const user = req.body;
 
-  const existingUser = await User.findOne({ username: user.username })
+  const existingUser = await User.findOne({ email: user.email })
     .select("+password")
     .exec();
 
@@ -163,10 +181,9 @@ exports.login = async (req, res, next) => {
     });
   }
 
-  // set session
   console.log(`[Auth] An user logged in`);
-  req.session.userId = existingUser._id;
-  console.log(`[Auth] userId: ${req.session.userId}`);
+  req.session.id = existingUser._id;
+  console.log(`[Auth] userId: ${req.session.id}`);
 
   res.status(200).json({
     message: "Logged in successfully",
@@ -175,8 +192,8 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-  console.log(`[Auth] sessionId: ${req.session.userId}`);
-  if (req.session && req.session.userId) {
+  console.log(`[Auth] sessionId: ${req.session.id}`);
+  if (req.session && req.session.id) {
     req.session.destroy((err) => {
       console.log("[Auth] An user is trying to logout");
       if (err) {
@@ -188,12 +205,16 @@ exports.logout = async (req, res, next) => {
         message: "Logged out",
       });
     });
+  } else {
+    res.json({
+      message: "Session of userId is not defined",
+    });
   }
 };
 
 exports.me = async (req, res, next) => {
-  if (req.session && req.session.userId) {
-    const user = await User.findOne({ _id: req.session.userId });
+  if (req.session && req.session.id) {
+    const user = await User.findOne({ _id: req.session.id });
     return res.status(200).json({
       message: "Authentication successful",
       user: user,

@@ -1,0 +1,9 @@
+export const connection = "connection";
+export const initializeQueue = "init";
+export const displayQueue = "display-queue";
+export const registerQueue = "register-queue";
+export const checkQueue = "check-queue";
+export const cancelQueue = "cancel-queue";
+export const deleteQueue = "delete-queue";
+export const getQueue = "get-queue";
+export const receiveQueue = "receive-queue";

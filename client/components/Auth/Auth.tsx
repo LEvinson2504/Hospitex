@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import Login from "./Login";
 import Register from "./Register";
 import { View } from "../UI/Themed";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 
 type Props = {
   setIsLoggedIn: (bool: boolean) => void;
@@ -16,7 +17,7 @@ const Auth: React.FC<Props> = ({ setIsLoggedIn }) => {
   const [currentDisplay, setCurrentDisplay] = useState(0);
 
   return (
-    <View>
+    <View style={styles.container}>
       {displays[currentDisplay]}
       <View>
         <Button
@@ -24,13 +25,29 @@ const Auth: React.FC<Props> = ({ setIsLoggedIn }) => {
             setCurrentDisplay(currentDisplay === 0 ? 1 : 0);
           }}
         >
-          {currentDisplay === 0
-            ? "Don't have an account? Register here"
-            : "Already have an account? Login"}
+          <Text styles={styles.redirect}>
+            {currentDisplay === 0
+              ? "Don't have an account?\nRegister here"
+              : "Already have an account? Login"}
+          </Text>
         </Button>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+  },
+  redirect: {
+    marginTop: 10,
+    paddingTop: 100,
+    fontSize: 5,
+  },
+});
 
 export default Auth;

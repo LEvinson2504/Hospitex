@@ -24,7 +24,7 @@ const RegisteredToken: React.FC<Props> = ({
             setIsTokenRegistered(false);
           }}
         >
-          Go back h3h3
+          Go back
         </Button>
       </View>
     </View>

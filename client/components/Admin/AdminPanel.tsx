@@ -1,32 +1,35 @@
 import React from "react";
 import { Title, Button } from "react-native-paper";
 import { View } from "../UI/Themed";
+import { HospitalProps } from "../types";
+import { DeleteQueues } from "../Sockets/DeleteQueues";
 
 type Props = {
   socket: SocketIOClient.Socket;
   setIsTokenRegistered: (bool: boolean) => void;
   setTokenId: (tokenId: string) => void;
-  setQueue: (queue: number) => void;
+  setQueues: React.Dispatch<React.SetStateAction<number[]>>;
+  hospitals: HospitalProps[];
 };
 
 const AdminPanel: React.FC<Props> = ({
   socket,
   setIsTokenRegistered,
   setTokenId,
-  setQueue,
+  setQueues,
+  hospitals,
 }) => {
   return (
     <View>
       <Button
         onPress={async () => {
-          console.log("Sending request to delete tokens");
-
-          try {
-            await socket.emit("delete-queue");
-            setIsTokenRegistered(false);
-            setTokenId("tokenId from server here");
-            setQueue(0);
-          } catch (err) {}
+          hospitals.forEach((hospital, index) => {
+            DeleteQueues({
+              hospitalId: hospital._id,
+              socket,
+              setQueues,
+            });
+          });
         }}
       >
         Mr Clean

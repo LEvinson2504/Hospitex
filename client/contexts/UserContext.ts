@@ -2,12 +2,12 @@ import { createContext, Dispatch, SetStateAction } from "react";
 
 type Props = {
   id: string;
-  username: string;
+  email: string;
   role: string;
   setUser: Dispatch<
     SetStateAction<{
       id: string;
-      username: string;
+      email: string;
       role: string;
     }>
   >;
@@ -15,7 +15,7 @@ type Props = {
 
 export const UserContext = createContext<Props>({
   id: "",
-  username: "",
+  email: "",
   role: "",
   setUser: () => {},
 });

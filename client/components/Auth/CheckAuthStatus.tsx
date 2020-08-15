@@ -5,7 +5,7 @@ import { baseURL } from "../../baseURL";
 
 interface Props {
   setUser: React.Dispatch<
-    React.SetStateAction<{ id: string; username: string; role: string }>
+    React.SetStateAction<{ id: string; email: string; role: string }>
   >;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,7 +23,7 @@ export const CheckAuthStatus = ({ setUser, setIsLoggedIn }: Props) => {
     if (response.user) {
       setUser({
         id: response.user._id,
-        username: response.user.username,
+        email: response.user.email,
         role: response.user.role,
       });
 

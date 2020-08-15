@@ -1,19 +1,23 @@
-exports.getTokens = async (redis) => {
-  return await redis.lrange("tokens", 0, -1);
+exports.getTokens = async (hospitalId, redis) => {
+  return await redis.lrange(hospitalId, 0, -1);
 };
 
-exports.getTokensLength = async (redis) => {
-  return await redis.llen("tokens");
+exports.getTokensLength = async (hospitalId, redis) => {
+  return await redis.llen(hospitalId);
 };
 
-exports.pushToken = async (redis, tokenId) => {
-  await redis.lpush("tokens", tokenId);
+exports.pushToken = async (hospitalId, redis, tokenId) => {
+  await redis.lpush(hospitalId, tokenId);
 };
 
-exports.removeCurrentToken = async (redis, tokenId) => {
-  await redis.rpop("tokens");
+exports.removeCurrentToken = async (hospitalId, redis) => {
+  await redis.rpop(hospitalId);
 };
 
-exports.deleteAllTokens = async (redis) => {
-  await redis.del("tokens");
+exports.deleteAllTokens = async (hospitalId, redis) => {
+  await redis.del(hospitalId);
+};
+
+exports.cancelToken = async (hospitalId, redis, id) => {
+  await redis.lrem(hospitalId, -1, id);
 };

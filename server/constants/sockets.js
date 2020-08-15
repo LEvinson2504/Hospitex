@@ -1,0 +1,9 @@
+exports.connection = "connection";
+exports.init = "init";
+exports.displayQueue = "display-queue";
+exports.registerQueue = "register-queue";
+exports.checkQueue = "check-queue";
+exports.cancelQueue = "cancel-queue";
+exports.deleteQueue = "delete-queue";
+exports.getQueue = "get-queue";
+exports.receiveQueue = "receive-queue";

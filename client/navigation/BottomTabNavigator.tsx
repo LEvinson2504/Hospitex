@@ -30,6 +30,7 @@ export default function BottomTabNavigator() {
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => (
+            // <Ionicons name="medkit"></Ionicons>
             <TabBarIcon name="ios-code" color={color} />
           ),
         }}

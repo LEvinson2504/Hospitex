@@ -2,11 +2,6 @@
 
 Hackathon Project for Garuda Hacks
 
-Made by
-
-- [_Steven Hansel_](https://www.linkedin.com/in/steven-hansel-902516148/)
-- [_Rivaldo_](https://www.linkedin.com/in/aldo-xin-a98247189/)
-
 ## Local Setup
 
 ### React Native Setup

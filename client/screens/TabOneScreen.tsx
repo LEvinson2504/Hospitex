@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { StyleSheet } from "react-native";
 
-import RegisteredToken from "../components/Token/RegisteredToken";
-import ApplyToken from "../components/Token/ApplyToken";
-import Auth from "../components/Auth/Auth";
 import { UserContext } from "../contexts/UserContext";
 import Admin from "../components/Admin/Admin";
 import { View } from "../components/UI/Themed";
@@ -14,23 +11,65 @@ import { roles } from "../constants/Roles";
 import AuthInfo from "../components/Auth/AuthInfo";
 import Queue from "../components/Queue/Queue";
 import { isLoggedInContext } from "../contexts/isLoggedInContext";
+import { DisplayQueue } from "../components/Sockets/DisplayQueue";
+import Axios from "axios";
+import { baseURL } from "../baseURL";
+import { displayQueue } from "../components/Sockets/socketUtils";
+import { HospitalProps } from "../components/types";
+import { InitQueue } from "../components/Sockets/InitQueue";
 
 const socket = InitSocket();
 
 const TabOneScreen: React.FC = () => {
-  const { setIsLoggedIn } = useContext(isLoggedInContext);
-  const { role, setUser } = useContext(UserContext);
+  const [queues, setQueues] = useState<number[]>([]);
+  const [hospitals, setHospitals] = useState<HospitalProps[]>([]);
   const [isTokenRegistered, setIsTokenRegistered] = useState<boolean>(false);
+
   const [tokenId, setTokenId] = useState<string>("");
-  const [queue, setQueue] = useState<number>();
+
+  const { setIsLoggedIn } = useContext(isLoggedInContext);
+  const { role } = useContext(UserContext);
+
+  const hospitalsRef = useRef(hospitals);
+  hospitalsRef.current = [];
+
+  const queuesRef = useRef(queues);
+  console.log(queuesRef.current);
 
   let display: JSX.Element;
 
   useEffect(() => {
-    socket.emit("init", "[Client] Client has connected to socket");
+    Axios({
+      method: "GET",
+      url: `${baseURL}/hospital/get-hospitals`,
+    })
+      .then((response) => {
+        if (response.data && response.data.hospitals) {
+          const hospitals = response.data.hospitals;
+          setHospitals(hospitals);
+          hospitalsRef.current = hospitals;
+
+          hospitals.forEach((hospital: HospitalProps, index: number) => {
+            InitQueue({
+              hospitalId: hospital._id,
+              socket,
+            });
+            DisplayQueue({
+              hospitalId: hospital._id,
+              index,
+              socket,
+              queues,
+              queuesRef,
+              setQueues,
+            });
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   console.log(`[Auth] role: ${role}`);
+  console.log(queues);
   switch (role) {
     case roles.hospital:
       display = (
@@ -38,7 +77,8 @@ const TabOneScreen: React.FC = () => {
           socket={socket}
           setIsTokenRegistered={setIsTokenRegistered}
           setTokenId={setTokenId}
-          setQueue={setQueue}
+          setQueues={setQueues}
+          hospitals={hospitals}
         />
       );
       break;
@@ -47,11 +87,13 @@ const TabOneScreen: React.FC = () => {
         <Queue
           tokenId={tokenId}
           setTokenId={setTokenId}
-          queue={queue}
-          setQueue={setQueue}
+          queuesRef={queuesRef}
+          queues={queues}
+          setQueues={setQueues}
           isTokenRegistered={isTokenRegistered}
           setIsTokenRegistered={setIsTokenRegistered}
           socket={socket}
+          hospitals={hospitals}
         />
       );
       break;
@@ -60,18 +102,19 @@ const TabOneScreen: React.FC = () => {
         <Queue
           tokenId={tokenId}
           setTokenId={setTokenId}
-          queue={queue}
-          setQueue={setQueue}
+          queuesRef={queuesRef}
+          queues={queues}
+          setQueues={setQueues}
           isTokenRegistered={isTokenRegistered}
           setIsTokenRegistered={setIsTokenRegistered}
           socket={socket}
+          hospitals={hospitals}
         />
       );
   }
 
   return (
     <View style={styles.container}>
-      {/* <AuthInfo /> */}
       <View>{display}</View>
       <View>
         <Logout setIsLoggedIn={setIsLoggedIn} />

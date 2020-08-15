@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const hospitalSchema = new mongoose.Schema({
-  username: {
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
     type: String,
     required: true,
   },
@@ -9,6 +13,13 @@ const hospitalSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  thumbnailUrl: {
+    type: String,
   },
   doctors: [
     {

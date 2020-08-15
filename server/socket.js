@@ -1,36 +1,23 @@
-const redisFunctions = require("./redis/queue");
+const sock = require("./constants/sockets");
 
-exports.tokenSocket = (redis, io) => {
-  io.on("connection", (socket) => {
-    socket.on("init", async (msg) => {
-      console.log(`${msg}`);
-      const len = await redisFunctions.getTokensLength(redis);
-      io.sockets.emit("display-queue", len);
-    });
+const Hospital = require("./models/hospital");
+const single = require("./singleSocket");
 
-    socket.on("register-queue", async (id) => {
-      console.log(`[Queue] Registering a queue ${id}`);
-      await redisFunctions.pushToken(redis, id);
+exports.tokenSocket = async (redis, io) => {
+  const Hospitals = await Hospital.find();
+  io.on(sock.connection, (socket) => {
+    console.log(`[Socket] Re-entering socket lifecycle`);
 
-      console.log("Tokens: ");
-      console.log(`${await redisFunctions.getTokens(redis)}`);
+    Hospitals.forEach((hospital) => {
+      single.singleSocket(hospital._id, socket, redis, io);
 
-      const len = await redisFunctions.getTokensLength(redis);
-
-      io.sockets.emit("display-queue", len);
-    });
-
-    socket.on("check-queue", async (id) => {});
-
-    socket.on("cancel-queue", async () => {});
-
-    socket.on("delete-queue", async () => {
-      await redisFunctions.deleteAllTokens(redis);
-
-      console.log(await redisFunctions.getTokens(redis));
-      const len = await redisFunctions.getTokensLength(redis);
-
-      io.sockets.emit("display-queue", len);
+      socket.on(hospital._id, async (message) => {
+        console.log(`[From Client] ${message}`);
+        console.log(
+          "I just joined hospital with the username of",
+          hospital.username
+        );
+      });
     });
   });
 };

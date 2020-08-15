@@ -17,9 +17,9 @@ export default function App() {
   // context api for user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [user, setUser] = useState({
-    id: "5f37773de595970f9512041e",
-    username: "Patient",
-    role: "patient",
+    id: "",
+    email: "",
+    role: "",
   });
   const userValues = {
     ...user,

@@ -12,11 +12,14 @@ const sharedSession = require("express-socket.io-session");
 const connectRedis = require("connect-redis");
 
 const app = express();
-app.options("*", cors());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_DOMAIN,
+  })
+);
 const server = http.createServer(app);
 const options = {
-  origin: "*:*",
+  origin: `${process.env.CLIENT_DOMAIN}`,
   handlePreflightRequest: (req, res) => {
     const headers = {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
@@ -28,7 +31,6 @@ const options = {
   },
 };
 
-// * THIS IS USED FOR THE SOCKETS
 const io = require("socket.io")(server, options);
 const redis = new Redis();
 
@@ -55,13 +57,15 @@ io.use(
     session({
       saveUninitialized: false,
       resave: false,
-      secret: "asdasdasdasd",
+      secret: process.env.SESSION_SECRET,
     }),
     {
       autoSave: true,
     }
   )
 );
+
+app.use(express.static("/images"));
 app.use(bodyParser.json());
 
 const sockets = require("./socket");

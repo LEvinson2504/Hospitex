@@ -1,26 +1,33 @@
 import React from "react";
 import { View } from "../UI/Themed";
 import { Title, List, Button, Subheading } from "react-native-paper";
-
-interface DoctorProps {
-  _id: string;
-  username: string;
-  role: string;
-  hospital: string;
-}
-
-interface HospitalProps {
-  _id: string;
-  username: string;
-  doctors: DoctorProps[];
-}
+import ApplyToken from "../Token/ApplyToken";
+import RegisteredToken from "../Token/RegisteredToken";
+import { HospitalProps } from "../types";
 
 interface Props {
   hospital: HospitalProps;
+  isTokenRegistered: boolean;
   setCurrentDisplay: React.Dispatch<React.SetStateAction<number>>;
+  setIsTokenRegistered: React.Dispatch<React.SetStateAction<boolean>>;
+  queue: number;
+  tokenId: string;
+  socket: SocketIOClient.Socket;
+  setTokenId: React.Dispatch<React.SetStateAction<string>>;
+  setQueues: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const Hospital: React.FC<Props> = ({ hospital, setCurrentDisplay }) => {
+const Hospital: React.FC<Props> = ({
+  hospital,
+  setQueues,
+  socket,
+  setTokenId,
+  tokenId,
+  setCurrentDisplay,
+  isTokenRegistered,
+  queue,
+  setIsTokenRegistered,
+}) => {
   return (
     <View>
       <Button
@@ -28,9 +35,26 @@ const Hospital: React.FC<Props> = ({ hospital, setCurrentDisplay }) => {
           setCurrentDisplay(0);
         }}
       >
-        Go Back
+        List of Hospitals
       </Button>
-      <Title>{hospital.username}</Title>
+      <Title>{hospital.name}</Title>
+      <View>
+        {isTokenRegistered && queue ? (
+          <RegisteredToken
+            tokenId={tokenId}
+            queue={queue}
+            setIsTokenRegistered={setIsTokenRegistered}
+          />
+        ) : (
+          <ApplyToken
+            socket={socket}
+            setIsTokenRegistered={setIsTokenRegistered}
+            setTokenId={setTokenId}
+            setQueues={setQueues}
+            hospital={hospital}
+          />
+        )}
+      </View>
       <Subheading>List of Doctors: </Subheading>
       <List.Section>
         {hospital.doctors.map((doctor) => (

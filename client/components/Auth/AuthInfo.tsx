@@ -4,11 +4,11 @@ import { UserContext } from "../../contexts/UserContext";
 import { Title, Subheading } from "react-native-paper";
 
 const AuthInfo: React.FC = () => {
-  const { id, username, role } = useContext(UserContext);
+  const { id, email, role } = useContext(UserContext);
   return (
     <View>
       <Title>
-        Welcome, {role} {username}
+        Welcome, {role} {email}
       </Title>
       <Subheading>Your id is {id}</Subheading>
     </View>
