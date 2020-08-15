@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View } from "./Themed";
 import Axios from "axios";
 import { baseURL } from "../baseURL";
-import { Title, Button } from "react-native-paper";
+import { Title, Button, List } from "react-native-paper";
 import AddDoctor from "./AddDoctor";
+import DoctorList from "./Doctors/DoctorList";
+import { UserContext } from "../contexts/UserContext";
 
+export interface DoctorProps {
+  _id: string;
+  username: string;
+  password: string;
+}
+
+export interface Props {
+  doctors: DoctorProps[];
+}
 const Doctors: React.FC = () => {
+  const { id } = useContext(UserContext);
   const [display, setDisplay] = useState([]);
   const [currentDisplay, setCurrentDisplay] = useState<number>(0);
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState<DoctorProps[]>([]);
 
   useEffect(() => {
     Axios({
       method: "GET",
-      url: `${baseURL}/hospital/get-doctors`,
+      url: `${baseURL}/hospital/get-doctors/${id}`,
     })
       .then((response) => {
-        if (response.data) {
+        if (response.data && response.data.doctors) {
           console.log("doctors: ");
-          console.log(response.data);
+          setDoctors(response.data.doctors);
         }
       })
-      .catch((err) => console.log(err));
-  }, [doctors]);
+      .catch((err) => console.log(err.message));
+  }, [currentDisplay]);
 
-  let renderDoctors = doctors.map((doctor) => (
-    <View>
-      <Title>asd</Title>
-    </View>
-  ));
   return (
     <View>
       <View>
-        {currentDisplay === 0 ? renderDoctors : <AddDoctor doctors={doctors} />}
+        {currentDisplay === 0 ? (
+          <DoctorList doctors={doctors} />
+        ) : (
+          <AddDoctor doctors={doctors} />
+        )}
       </View>
       <View>
         <Button

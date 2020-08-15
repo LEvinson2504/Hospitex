@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text } from "./Themed";
 import { Button, RadioButton, TextInput } from "react-native-paper";
 import { Formik } from "formik";
@@ -6,15 +6,16 @@ import Axios from "axios";
 import { baseURL } from "../baseURL";
 import * as Yup from "yup";
 import { UserContext } from "../contexts/UserContext";
+import { Checkbox } from "react-native-paper";
 
-interface Doctor {
+export interface DoctorProps {
   _id: string;
   username: string;
   password: string;
 }
 
-interface Props {
-  doctors: Doctor[];
+export interface Props {
+  doctors: DoctorProps[];
 }
 
 const validationSchema = Yup.object().shape({
@@ -26,55 +27,70 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddDoctor: React.FC<Props> = ({ doctors }) => {
+  const [allDoctors, setAllDoctors] = useState<DoctorProps[]>([]);
+  const [checked, setChecked] = useState<boolean[]>([]);
   const { id } = useContext(UserContext);
+
+  useEffect(() => {
+    Axios({
+      method: "GET",
+      url: `${baseURL}/hospital/get-doctors`,
+    })
+      .then((response) => {
+        if (response.data && response.data.doctors) {
+          const allDoctorIds = response.data.doctors.map(
+            (doctor: DoctorProps) => {
+              return doctor._id;
+            }
+          );
+
+          const newChecked = doctors.map((doctor: DoctorProps) => {
+            return allDoctorIds.includes(doctor._id);
+          });
+          setChecked(newChecked);
+          setAllDoctors(response.data.doctors);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }, []);
 
   return (
     <View>
       <Text>Add a doctor</Text>
       <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View>
-        <Formik
-          onSubmit={async (values) => {
-            console.log(`[Hospital] hospitalId: ${id}`);
-            const response = await Axios({
-              method: "POST",
-              url: `${baseURL}/hospital/add-doctor`,
-              data: {
-                ...values,
-                hospitalId: id,
-              },
-            });
-            console.log(response.data);
+        {allDoctors.map((doctor, index) => (
+          <View key={doctor._id}>
+            <Checkbox
+              status={checked[index] ? "checked" : "unchecked"}
+              onPress={async () => {
+                const newCheck = [...checked];
+                newCheck[index] = !checked[index];
+                setChecked(newCheck);
 
-            if (response.data) {
-              // add notification succesful here
-            } else {
-              // add fail notification
-            }
-          }}
-          initialValues={{
-            username: "",
-            password: "",
-          }}
-          validationSchema={validationSchema}
-        >
-          {({ values, handleSubmit, handleChange, errors }) => (
-            <View>
-              <TextInput
-                label="Username"
-                value={values.username}
-                onChangeText={handleChange("username")}
-              />
-              <TextInput
-                label="Password"
-                value={values.password}
-                onChangeText={handleChange("password")}
-              />
-              <Text style={{ color: "red" }}>{errors.password}</Text>
-              <Button onPress={handleSubmit}>Add Doctors</Button>
-            </View>
-          )}
-        </Formik>
+                Axios({
+                  method: "POST",
+                  url: `${baseURL}/hospital/${
+                    newCheck[index] ? "push-doctor" : "pop-doctor"
+                  }`,
+                  data: {
+                    doctorId: doctor._id,
+                    hospitalId: id,
+                  },
+                })
+                  .then((response) => {
+                    if (response.data && response.data.hospital) {
+                      console.log(response.data.hospital);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err.message);
+                  });
+              }}
+            />
+            <Text>{doctor.username}</Text>
+          </View>
+        ))}
       </View>
     </View>
   );

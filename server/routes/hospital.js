@@ -8,9 +8,10 @@ const hospitalController = require("../controllers/hospital");
 // router.post("/add-doctor", hospitalController.addDoctor);
 // router.put("/update-doctor", hospitalController.addDoctor);
 // router.delete("/delete-doctor", hospitalController.addDoctor);
+router.get("/get-doctors/:hospitalId", hospitalController.getDoctors);
+router.get("/get-doctors", hospitalController.getAllDoctors);
 router.get("/get-doctor", hospitalController.getDoctor);
-router.get("/get-doctors", hospitalController.getDoctors);
 router.post("/push-doctor", hospitalController.pushDoctor);
-router.delete("/pop-doctor", hospitalController.popDoctor);
+router.post("/pop-doctor", hospitalController.popDoctor);
 
 module.exports = router;

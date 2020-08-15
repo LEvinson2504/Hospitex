@@ -43,7 +43,6 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
               if (response.data && response.data.user) {
                 console.log("[Auth] User successfully logged in");
                 const user = response.data.user;
-                console.log(user._id);
                 await AsyncStorage.setItem("cookies", user._id, (err) => {
                   console.log("[Cookies] setStorage failed");
                   console.log(err);
@@ -52,7 +51,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn }) => {
                 setUser({
                   id: user._id,
                   username: user.username,
-                  role: values.type === "patient" ? "patient" : "hospital",
+                  role: values.type,
                 });
                 setIsLoggedIn(true);
               }
