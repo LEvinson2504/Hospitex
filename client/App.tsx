@@ -15,11 +15,11 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   // context api for user
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [user, setUser] = useState({
-    id: "",
-    username: "",
-    role: "",
+    id: "5f37773de595970f9512041e",
+    username: "Patient",
+    role: "patient",
   });
   const userValues = {
     ...user,

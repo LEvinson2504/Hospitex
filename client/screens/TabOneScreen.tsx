@@ -30,7 +30,7 @@ const TabOneScreen: React.FC = () => {
     socket.emit("init", "[Client] Client has connected to socket");
   }, []);
 
-  console.log(`Queue: ${queue}`);
+  console.log(`[Auth] role: ${role}`);
   switch (role) {
     case roles.hospital:
       display = (
@@ -71,7 +71,7 @@ const TabOneScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <AuthInfo />
+      {/* <AuthInfo /> */}
       <View>{display}</View>
       <View>
         <Logout setIsLoggedIn={setIsLoggedIn} />

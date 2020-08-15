@@ -72,6 +72,11 @@ const authRoutes = require("./routes/auth");
 const hospitalRoutes = require("./routes/hospital");
 app.use("/auth", authRoutes);
 app.use("/hospital", hospitalRoutes);
+app.use("/", (req, res, next) => {
+  return res.json({
+    message: "Hi",
+  });
+});
 
 const connectDB = async () => {
   try {

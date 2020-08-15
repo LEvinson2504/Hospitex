@@ -43,7 +43,9 @@ exports.loginHospital = async (req, res, next) => {
 
   const existingHospital = await Hospital.findOne({
     username: hospital.username,
-  });
+  })
+    .select("+password")
+    .exec();
   if (!existingHospital) {
     return res.status(404).json({
       message: "Hospital not found",
@@ -142,7 +144,10 @@ exports.login = async (req, res, next) => {
   console.log("[Auth] An user is trying to login");
   const user = req.body;
 
-  const existingUser = await User.findOne({ username: user.username });
+  const existingUser = await User.findOne({ username: user.username })
+    .select("+password")
+    .exec();
+
   if (!existingUser) {
     return res.status(404).json({
       message: "User not found",
