@@ -1,7 +1,6 @@
 # Hospitex
 
-Hackathon Project for Garuda Hacks
-
+An implementation of online queue system for managing patients in healthcare infratstructure such as hospitals, clinics, and etc.
 ## Local Setup
 
 ### React Native Setup
