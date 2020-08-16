@@ -24,8 +24,8 @@ const validationSchema = Yup.object().shape({
 
 const Register: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>REGISTER</Text>
+    <View>
+      <Text>REGISTER</Text>
       <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View>
         <Formik
@@ -51,14 +51,14 @@ const Register: React.FC = () => {
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <View>
-              <View style={styles.form}>
+              <View>
                 <TextInput
                   mode="outlined"
                   label="Name"
                   value={values.name}
                   onChangeText={handleChange("name")}
                 />
-                <Text style={{ color: "red" }}>{errors.name}</Text>
+                <Text>{errors.name}</Text>
 
                 <TextInput
                   mode="outlined"
@@ -68,14 +68,14 @@ const Register: React.FC = () => {
                   onChangeText={handleChange("password")}
                 />
 
-                <Text style={{ color: "red" }}>{errors.password}</Text>
+                <Text>{errors.password}</Text>
                 <TextInput
                   mode="outlined"
                   label="Email"
                   value={values.email}
                   onChangeText={handleChange("email")}
                 />
-                <Text style={{ color: "red" }}>{errors.email}</Text>
+                <Text>{errors.email}</Text>
 
                 <TextInput
                   mode="outlined"
@@ -83,19 +83,19 @@ const Register: React.FC = () => {
                   value={values.phone}
                   onChangeText={handleChange("phone")}
                 />
-                <Text style={{ color: "red" }}>{errors.phone}</Text>
+                <Text>{errors.phone}</Text>
               </View>
 
               <RadioButton.Group
                 onValueChange={handleChange("role")}
                 value={values.role}
               >
-                <View style={styles.roles}>
-                  <View style={styles.role}>
+                <View>
+                  <View>
                     <Text>Patient</Text>
                     <RadioButton value="patient" />
                   </View>
-                  <View style={styles.role}>
+                  <View>
                     <Text>Hospital</Text>
                     <RadioButton value="hospital" />
                   </View>
@@ -116,44 +116,5 @@ const Register: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    height: 60,
-    // width: 20,
-    marginHorizontal: 50,
-    borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-    marginBottom: 25,
-    paddingBottom: 10,
-  },
-  title: {
-    fontSize: 20,
-    // fontWeight: "bold",
-    // fontFamily: "Montserrat",
-  },
-  form: {},
-  roles: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    // textAlign: "center",
-  },
-  role: {
-    padding: 4,
-  },
-});
 
 export default Register;

@@ -6,14 +6,7 @@ import * as React from "react";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import TabOneScreen from "../screens/TabOneScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
-import {
-  BottomTabParamList,
-  TabOneParamList,
-  TabTwoParamList,
-  TabThreeParamList,
-} from "../types";
-import TabThreeScreen from "../screens/TabThreeScreen";
+import { BottomTabParamList, TabOneParamList } from "../types";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -31,24 +24,6 @@ export default function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => (
             // <Ionicons name="medkit"></Ionicons>
-            <TabBarIcon name="ios-code" color={color} />
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
-          ),
-        }}
-      />
-      <BottomTab.Screen
-        name="TabThree"
-        component={TabThreeNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-code" color={color} />
           ),
         }}
@@ -76,33 +51,5 @@ function TabOneNavigator() {
         options={{ headerTitle: "Tab One Title" }}
       />
     </TabOneStack.Navigator>
-  );
-}
-
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
-
-function TabTwoNavigator() {
-  return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
-      />
-    </TabTwoStack.Navigator>
-  );
-}
-
-const TabThreeStack = createStackNavigator<TabThreeParamList>();
-
-function TabThreeNavigator() {
-  return (
-    <TabThreeStack.Navigator>
-      <TabThreeStack.Screen
-        name="TabThreeScreen"
-        component={TabThreeScreen}
-        options={{ headerTitle: "Login" }}
-      />
-    </TabThreeStack.Navigator>
   );
 }

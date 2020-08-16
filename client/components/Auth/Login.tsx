@@ -31,8 +31,8 @@ const Login: React.FC<Props> = () => {
   const { setUser } = useContext(UserContext);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>LOGIN</Text>
+    <View>
+      <Text>LOGIN</Text>
       <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View>
         <Formik
@@ -70,20 +70,20 @@ const Login: React.FC<Props> = () => {
           initialValues={{
             email: "",
             password: "",
-            type: "",
+            type: "patient",
           }}
           validationSchema={validationSchema}
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <View>
-              <View style={styles.form}>
+              <View>
                 <TextInput
                   mode="outlined"
                   label="Email"
                   value={values.email}
                   onChangeText={handleChange("email")}
                 />
-                <Text style={{ color: "red" }}>{errors.email}</Text>
+                <Text>{errors.email}</Text>
                 <TextInput
                   mode="outlined"
                   label="Password"
@@ -91,18 +91,18 @@ const Login: React.FC<Props> = () => {
                   secureTextEntry={true}
                   onChangeText={handleChange("password")}
                 />
-                <Text style={{ color: "red" }}>{errors.password}</Text>
+                <Text>{errors.password}</Text>
               </View>
               <RadioButton.Group
                 onValueChange={handleChange("type")}
                 value={values.type}
               >
-                <View style={styles.roles}>
-                  <View style={styles.role}>
+                <View>
+                  <View>
                     <Text>Patient</Text>
                     <RadioButton value="patient" />
                   </View>
-                  <View style={styles.role}>
+                  <View>
                     <Text>Hospital</Text>
                     <RadioButton value="hospital" />
                   </View>
@@ -123,45 +123,45 @@ const Login: React.FC<Props> = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
-    height: 60,
-    // width: 20,
-    marginHorizontal: 50,
-    borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-    marginBottom: 25,
-    paddingBottom: 10,
-  },
-  title: {
-    fontSize: 20,
-    // fontWeight: "bold",
-    // fontFamily: "Montserrat",
-  },
-  form: {
-    paddingVertical: 1,
-  },
-  roles: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    // textAlign: "center",
-  },
-  role: {
-    padding: 4,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     backgroundColor: "#fff",
+//     height: 60,
+//     // width: 20,
+//     marginHorizontal: 50,
+//     borderRadius: 5,
+//     shadowColor: "#000",
+//     shadowOffset: {
+//       width: 0,
+//       height: 1,
+//     },
+//     shadowOpacity: 0.2,
+//     shadowRadius: 1.41,
+//     elevation: 2,
+//     marginBottom: 25,
+//     paddingBottom: 10,
+//   },
+//   title: {
+//     fontSize: 20,
+//     // fontWeight: "bold",
+//     // fontFamily: "Montserrat",
+//   },
+//   form: {
+//     paddingVertical: 1,
+//   },
+//   roles: {
+//     flex: 1,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     flexDirection: "row",
+//     // textAlign: "center",
+//   },
+//   role: {
+//     padding: 4,
+//   },
+// });
 
 export default Login;

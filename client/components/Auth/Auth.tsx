@@ -25,7 +25,7 @@ const Auth: React.FC<Props> = ({ setIsLoggedIn }) => {
             setCurrentDisplay(currentDisplay === 0 ? 1 : 0);
           }}
         >
-          <Text styles={styles.redirect}>
+          <Text>
             {currentDisplay === 0
               ? "Don't have an account?\nRegister here"
               : "Already have an account? Login"}
@@ -38,12 +38,6 @@ const Auth: React.FC<Props> = ({ setIsLoggedIn }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: [{ translateX: -50 }, { translateY: -50 }],
-  },
-  redirect: {
     marginTop: 10,
     paddingTop: 100,
     fontSize: 5,

@@ -12,14 +12,10 @@ const sharedSession = require("express-socket.io-session");
 const connectRedis = require("connect-redis");
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.CLIENT_DOMAIN,
-  })
-);
+app.use(cors());
 const server = http.createServer(app);
 const options = {
-  origin: `${process.env.CLIENT_DOMAIN}`,
+  origin: `*:*`,
   handlePreflightRequest: (req, res) => {
     const headers = {
       "Access-Control-Allow-Headers": "Content-Type, Authorization",

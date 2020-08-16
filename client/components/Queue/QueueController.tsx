@@ -22,6 +22,7 @@ const QueueController: React.FC<Props> = ({
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   return (
     <Button
+      mode="contained"
       onPress={() => {
         if (!isRegistered) {
           RegisterQueue({

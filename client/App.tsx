@@ -15,7 +15,7 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   // context api for user
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState({
     id: "",
     email: "",
